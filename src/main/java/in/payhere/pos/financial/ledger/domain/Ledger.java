@@ -5,17 +5,19 @@ import in.payhere.pos.financial.authentication.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 @Entity
 public class Ledger extends BaseEntity {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ledger_id")
@@ -29,31 +31,55 @@ public class Ledger extends BaseEntity {
 
     private BigDecimal usedMoney;
 
-    private LocalDateTime usedDate;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ledgerDetail_id")
-    private LedgerDetail ledgerDetail;
+    private String content;
 
     @Enumerated(EnumType.STRING)
-    private LedgerStatus ledgerStatus;
+    private LedgerStatus status;
 
 
     // 생성자
-    private Ledger(Long id, String title, BigDecimal usedMoney, LocalDateTime usedDate, User user, LedgerDetail ledgerDetail) {
+    private Ledger(Long id, String title, BigDecimal usedMoney, String content) {
         this.id = id;
         this.title = title;
         this.usedMoney = usedMoney;
-        this.usedDate = usedDate;
+        this.content = content;
+        this.status = LedgerStatus.DISPLAY;
+    }
+
+    private void setUser(User user) {
         this.user = user;
-        this.ledgerDetail = ledgerDetail;
-        this.ledgerStatus = LedgerStatus.NON_DELETED;
+        user.getLedgers().add(this);
     }
 
-    public static Ledger create(Long id, String title, BigDecimal usedMoney, LocalDateTime usedDate, User user, LedgerDetail ledgerDetail) {
-        return new Ledger(id, title, usedMoney, usedDate, user, ledgerDetail);
+    public static Ledger create(String title, BigDecimal usedMoney) {
+        return create(null, title, usedMoney, null, null);
     }
 
+    public static Ledger create(Long id, String title, BigDecimal usedMoney, String content, User user) {
+        Ledger ledger = new Ledger(id, title, usedMoney, content);
+        if (user != null) {
+            ledger.setUser(user);
+        }
+        return ledger;
+    }
+
+    public void update(Ledger updateLedger) {
+        if (StringUtils.hasText(updateLedger.getTitle())) {
+            this.title = updateLedger.getTitle();
+        }
+
+        if (updateLedger.getUsedMoney() != null) {
+            this.usedMoney = updateLedger.getUsedMoney();
+        }
+    }
+
+    public void remove() {
+        this.status = LedgerStatus.DELETED;
+    }
+
+    public void restore() {
+        this.status = LedgerStatus.DISPLAY;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -67,4 +93,6 @@ public class Ledger extends BaseEntity {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
