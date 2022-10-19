@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/users").permitAll()  // 회원가입
                 .antMatchers("/login").permitAll()  // 로그인
-                .anyRequest().authenticated();  // 그 외에 모든 요청은 인증필요
+                .anyRequest().access("hasRole('ROLE_USER')");  // 그 외에 모든 요청은 인증필요
 
     }
 
