@@ -1,7 +1,7 @@
 package in.payhere.pos.financial.ledger.domain;
 
 import in.payhere.pos.common.domain.BaseEntity;
-import in.payhere.pos.financial.authentication.domain.User;
+import in.payhere.pos.financial.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +49,10 @@ public class Ledger extends BaseEntity {
     private void setUser(User user) {
         this.user = user;
         user.getLedgers().add(this);
+    }
+
+    public static Ledger create(String title, BigDecimal usedMoney, String content, User user) {
+        return create(null, title, usedMoney, content, user);
     }
 
     public static Ledger create(String title, BigDecimal usedMoney) {

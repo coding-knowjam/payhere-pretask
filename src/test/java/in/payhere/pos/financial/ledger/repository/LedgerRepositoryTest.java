@@ -2,8 +2,8 @@ package in.payhere.pos.financial.ledger.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import in.payhere.pos.financial.authentication.domain.User;
-import in.payhere.pos.financial.authentication.repository.UserRepository;
+import in.payhere.pos.financial.user.domain.User;
+import in.payhere.pos.financial.user.repository.UserRepository;
 import in.payhere.pos.financial.ledger.domain.Ledger;
 import in.payhere.pos.financial.ledger.domain.LedgerStatus;
 import org.junit.jupiter.api.DisplayName;
