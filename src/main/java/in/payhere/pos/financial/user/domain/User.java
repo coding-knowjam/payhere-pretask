@@ -1,7 +1,8 @@
-package in.payhere.pos.financial.authentication.domain;
+package in.payhere.pos.financial.user.domain;
 
 import in.payhere.pos.common.domain.BaseEntity;
 import in.payhere.pos.financial.ledger.domain.Ledger;
+import in.payhere.pos.financial.ledger.domain.LedgerStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,9 @@ public class User extends BaseEntity {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Ledger> ledgers = new ArrayList<>();
 
@@ -35,6 +39,11 @@ public class User extends BaseEntity {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.role = UserRole.ROLE_USER;
+    }
+
+    public static User create(String email, String password) {
+        return create(null, email, password);
     }
 
     public static User create(Long id, String email, String password) {

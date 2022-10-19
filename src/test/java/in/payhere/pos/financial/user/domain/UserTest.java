@@ -1,4 +1,4 @@
-package in.payhere.pos.financial.authentication.domain;
+package in.payhere.pos.financial.user.domain;
 
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;

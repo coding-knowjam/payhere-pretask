@@ -1,6 +1,6 @@
-package in.payhere.pos.financial.authentication.repository;
+package in.payhere.pos.financial.user.repository;
 
-import in.payhere.pos.financial.authentication.domain.User;
+import in.payhere.pos.financial.user.domain.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
